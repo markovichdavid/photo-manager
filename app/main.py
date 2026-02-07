@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
 from sqlmodel import Session, select
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from app.db import engine, init_db
 from app.llm import build_llm_client
@@ -20,6 +22,16 @@ UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", "uploads"))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Photo Manager", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+DEBUG = True
 
 
 def get_session() -> Session:
@@ -44,6 +56,9 @@ async def upload_image(
 ) -> ImageRead:
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="הקובץ חייב להיות תמונה")
+    
+    if DEBUG:
+        print("subject:", subject)
 
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
     safe_name = file.filename.replace(" ", "_")
