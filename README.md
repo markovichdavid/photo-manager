@@ -33,3 +33,17 @@ OPENAI_MODEL=gpt-4o-mini
 - `POST /images/{image_id}/review` — בקשת ביקורת LLM.
 
 ראו דוגמה לסכמות והחזרה ב־`/docs` של FastAPI.
+
+## אפליקציית ווב (Next.js)
+בתיקיית `web/` נמצאת אפליקציית Next.js שמאפשרת להעלות תמונות לשרת ולראות אותן בגלריה.
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+אפשר להגדיר את כתובת ה-API עם המשתנה:
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
