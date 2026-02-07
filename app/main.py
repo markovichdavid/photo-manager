@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile, Form
 from fastapi.responses import FileResponse
 from sqlmodel import Session, select
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,11 +47,11 @@ def on_startup() -> None:
 @app.post("/images", response_model=ImageRead)
 async def upload_image(
     file: UploadFile = File(...),
-    subject: Optional[str] = None,
-    owner_name: Optional[str] = None,
-    location: Optional[str] = None,
-    guide_name: Optional[str] = None,
-    notes: Optional[str] = None,
+   subject: str | None = Form(None),
+    owner_name: str | None = Form(None),
+    location: str | None = Form(None),
+    guide_name: str | None = Form(None),
+    notes: str | None = Form(None),
     session: Session = Depends(get_session),
 ) -> ImageRead:
     if not file.content_type or not file.content_type.startswith("image/"):
